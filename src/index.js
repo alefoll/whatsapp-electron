@@ -1,4 +1,7 @@
 const { app, BrowserWindow, Menu, Tray } = require("electron");
+const { argv } = require("yargs");
+
+const Store = require("electron-store");
 
 const path = require("path");
 
@@ -22,13 +25,17 @@ app.on("second-instance", () => {
     }
 });
 
+const store = new Store();
+
 let mainWindow;
 let tray;
 
 app.on("ready", () => {
     mainWindow = new BrowserWindow({
-        width           : 1024,
-        height          : 768,
+        width           : store.get("window.width")  || 1024,
+        height          : store.get("window.height") || 768,
+        x               : store.get("window.x"),
+        y               : store.get("window.y"),
         backgroundColor : "#dddbd1",
         icon            : `${ __dirname }/icon.ico`,
         show            : false,
@@ -41,9 +48,17 @@ app.on("ready", () => {
 
     mainWindow.setMenu(null);
 
+    let minimizedFirstOpen = false;
+
     mainWindow.once("ready-to-show", async() => {
-        mainWindow.show();
-        mainWindow.maximize();
+        if (!argv.startMinimized) {
+            if (store.get("window.maximized"))
+                mainWindow.maximize();
+            else
+                mainWindow.show();
+        } else {
+            minimizedFirstOpen = true;
+        }
 
         // mainWindow.webContents.openDevTools();
     });
@@ -61,12 +76,26 @@ app.on("ready", () => {
     tray = new Tray(`${ __dirname }/icon.ico`);
 
     tray.on("double-click", () => {
-        mainWindow.show();
+        if (minimizedFirstOpen) {
+            minimizedFirstOpen = false;
+
+            if (store.get("window.maximized"))
+                mainWindow.maximize();
+            else
+                mainWindow.show();
+        } else {
+            mainWindow.show();
+        }
     });
 
     const contextMenu = Menu.buildFromTemplate([{
         label: "Exit",
         click() {
+            if (!mainWindow.isMaximized())
+                store.set("window", mainWindow.getBounds());
+
+            store.set("window.maximized", mainWindow.isMaximized());
+
             mainWindow.destroy();
 
             app.quit();
