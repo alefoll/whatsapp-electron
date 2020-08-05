@@ -36,12 +36,12 @@ app.on("ready", () => {
         height          : store.get("window.height") || 768,
         x               : store.get("window.x"),
         y               : store.get("window.y"),
-        backgroundColor : "#dddbd1",
+        backgroundColor : "#131C21",
         icon            : `${ __dirname }/icon.ico`,
         show            : false,
         title           : "WhatsApp",
         webPreferences: {
-            // webviewTag: true,
+            webviewTag: true,
             enableRemoteModule: false,
         },
     });
@@ -109,7 +109,16 @@ app.on("ready", () => {
     tray.setToolTip("WhatsApp");
     tray.setContextMenu(contextMenu);
 
-    // mainWindow.loadURL(`file://${ __dirname }/index.html`);
+    mainWindow.on("page-title-updated", (event, title) => {
+        mainWindow.setTitle(title);
+        tray.setToolTip(title);
+
+        if (/^\(\d+\)/.test(title))
+            tray.setImage(`${ __dirname }/icon-unread.ico`);
+        else
+            tray.setImage(`${ __dirname }/icon.ico`);
+    });
+
     mainWindow.loadURL("https://web.whatsapp.com/", {
         userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4219.0 Safari/537.36"
     });
