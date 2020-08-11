@@ -10,7 +10,7 @@ if (require("electron-squirrel-startup")) { // eslint-disable-line global-requir
     app.quit();
 }
 
-const gotTheLock = app.requestSingleInstanceLock()
+const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
     app.quit();
@@ -25,10 +25,14 @@ app.on("second-instance", () => {
     }
 });
 
+const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4229.0 Safari/537.36";
+
 const store = new Store();
 
 let mainWindow;
 let tray;
+
+app.userAgentFallback = userAgent;
 
 app.on("ready", () => {
     mainWindow = new BrowserWindow({
@@ -120,7 +124,7 @@ app.on("ready", () => {
     });
 
     mainWindow.loadURL("https://web.whatsapp.com/", {
-        userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4219.0 Safari/537.36"
+        userAgent: userAgent
     });
 });
 
