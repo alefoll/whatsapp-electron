@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray } = require("electron");
+const { app, BrowserWindow, Menu, Tray, shell } = require("electron");
 const { argv } = require("yargs");
 
 const Store = require("electron-store");
@@ -25,7 +25,7 @@ app.on("second-instance", () => {
     }
 });
 
-const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4229.0 Safari/537.36";
+const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
 
 const store = new Store();
 
@@ -45,8 +45,7 @@ app.on("ready", () => {
         show            : false,
         title           : "WhatsApp",
         webPreferences: {
-            webviewTag: true,
-            enableRemoteModule: false,
+            enableRemoteModule: false
         },
     });
 
@@ -121,6 +120,12 @@ app.on("ready", () => {
             tray.setImage(`${ __dirname }/icon-unread.ico`);
         else
             tray.setImage(`${ __dirname }/icon.ico`);
+    });
+
+    mainWindow.webContents.on("new-window", (event, url) => {
+        event.preventDefault();
+
+        shell.openExternal(url);
     });
 
     mainWindow.loadURL("https://web.whatsapp.com/", {
