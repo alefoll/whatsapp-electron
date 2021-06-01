@@ -1,7 +1,7 @@
 {
   "name": "whatsapp-electron",
   "productName": "whatsapp-electron",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "WhatsApp Web",
   "main": "index.js",
   "repository": "git@github.com:alefoll/whatsapp-electron.git",
