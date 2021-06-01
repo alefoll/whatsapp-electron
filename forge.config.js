@@ -1,22 +1,30 @@
 const path = require("path");
 
+const name = "WhatsApp";
+const icon = path.resolve(__dirname, "./icon.ico");
+
 module.exports = {
     makers: [{
         name: "@electron-forge/maker-squirrel",
         config: {
-            title: "WhatsApp Electron",
-            iconUrl: path.resolve(__dirname, "./icon.ico"),
+            name,
+            title     : name,
+            iconUrl   : icon,
+            setupIcon : icon,
         },
     }],
     packagerConfig: {
-        asar: true,
+        icon,
+        name,
+        asar           : true,
+        executableName : name
     },
     publishers: [{
         name: "@electron-forge/publisher-github",
         config: {
             repository: {
-                owner: "alefoll",
-                name: "whatsapp-electron",
+                owner : "alefoll",
+                name  : "whatsapp-electron",
             },
         },
     }],

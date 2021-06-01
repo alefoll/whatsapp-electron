@@ -41,7 +41,7 @@ app.on("ready", () => {
         x               : store.get("window.x"),
         y               : store.get("window.y"),
         backgroundColor : "#131C21",
-        icon            : `${ __dirname }/icon.ico`,
+        icon            : path.resolve(__dirname, "./icon.ico"),
         show            : false,
         title           : "WhatsApp",
         webPreferences: {
@@ -76,7 +76,7 @@ app.on("ready", () => {
         mainWindow = null;
     });
 
-    tray = new Tray(`${ __dirname }/icon.ico`);
+    tray = new Tray(path.resolve(__dirname, "./icon.ico"));
 
     tray.on("double-click", () => {
         if (minimizedFirstOpen) {
@@ -117,9 +117,9 @@ app.on("ready", () => {
         tray.setToolTip(title);
 
         if (/^\(\d+\)/.test(title))
-            tray.setImage(`${ __dirname }/icon-unread.ico`);
+            tray.setImage(path.resolve(__dirname, "./icon-unread.ico"));
         else
-            tray.setImage(`${ __dirname }/icon.ico`);
+            tray.setImage(path.resolve(__dirname, "./icon.ico"));
     });
 
     mainWindow.webContents.on("new-window", (event, url) => {
