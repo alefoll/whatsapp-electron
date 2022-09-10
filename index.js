@@ -18,14 +18,15 @@ if (!gotTheLock) {
 
 app.on("second-instance", () => {
     if (mainWindow) {
-        if (mainWindow.isMinimized())
+        if (mainWindow.isMinimized()) {
             mainWindow.restore();
+        }
 
         mainWindow.focus();
     }
 });
 
-const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36";
+const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36";
 
 const store = new Store();
 
@@ -55,10 +56,11 @@ app.on("ready", () => {
 
     mainWindow.once("ready-to-show", async() => {
         if (!argv.startMinimized) {
-            if (store.get("window.maximized"))
+            if (store.get("window.maximized")) {
                 mainWindow.maximize();
-            else
+            } else {
                 mainWindow.show();
+            }
         } else {
             minimizedFirstOpen = true;
         }
@@ -82,10 +84,11 @@ app.on("ready", () => {
         if (minimizedFirstOpen) {
             minimizedFirstOpen = false;
 
-            if (store.get("window.maximized"))
+            if (store.get("window.maximized")) {
                 mainWindow.maximize();
-            else
+            } else {
                 mainWindow.show();
+            }
         } else {
             mainWindow.show();
         }
@@ -94,8 +97,9 @@ app.on("ready", () => {
     const contextMenu = Menu.buildFromTemplate([{
         label: "Exit",
         click() {
-            if (!mainWindow.isMaximized())
+            if (!mainWindow.isMaximized()) {
                 store.set("window", mainWindow.getBounds());
+            }
 
             store.set("window.maximized", mainWindow.isMaximized());
 
@@ -116,10 +120,11 @@ app.on("ready", () => {
         mainWindow.setTitle(title);
         tray.setToolTip(title);
 
-        if (/^\(\d+\)/.test(title))
+        if (/^\(\d+\)/.test(title)) {
             tray.setImage(path.resolve(__dirname, "./icon-unread.ico"));
-        else
+        } else {
             tray.setImage(path.resolve(__dirname, "./icon.ico"));
+        }
     });
 
     mainWindow.webContents.on("new-window", (event, url) => {
